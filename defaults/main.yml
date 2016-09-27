@@ -1,0 +1,11 @@
+---
+#here comes default vars for your role
+#
+# #myvar is used to do something great
+# myvar: value
+#
+
+
+
+logstash_repo_gpg_key: https://packages.elastic.co/GPG-KEY-elasticsearch
+logstash_apt_repo: https://packages.elastic.co/logstash/2.4/debian
