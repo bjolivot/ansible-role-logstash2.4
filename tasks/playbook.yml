@@ -2,6 +2,10 @@
 # here comes the real playbook, executed after env check
 
 
+- name: allow java to open privilegied socket (1)
+  capabilities: path="/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java" capability=cap_net_bind_service=+epi state=present
+  notify: restart_logstash
+
 - name: Add GPG key
   apt_key: url={{logstash_repo_gpg_key}} state=present
 
@@ -10,14 +14,6 @@
 
 - name: Install Logstash
   apt: pkg=logstash state=present cache_valid_time=3600 update_cache=yes
-
-- name: make sure conf directory exists
-  file: dest="{{logstash_etc_dir}}" state=directory owner="{{logstash_user}}" group="{{logstash_group}}"
-  notify: restart_logstash
-
-- name: make sure log directory exists
-  file: dest="{{logstash_log_dir}}" state=directory owner="{{logstash_user}}" group="{{logstash_group}}"
-  notify: restart_logstash
 
 - name: Conf logstashInput
   template: src=logstash_input.conf.j2 dest="{{logstash_etc_dir}}/logstash_input.conf"
@@ -31,11 +27,13 @@
   template: src=logstash_filter.conf.j2 dest="{{logstash_etc_dir}}/logstash_filter.conf"
   notify: restart_logstash
 
+- name: List installed plugins
+  command: /opt/logstash/bin/logstash-plugin list
+  register: list
+  changed_when: 1 == 2
 
-- name: configure /etc/default/logstash
-  template: src=etc_default_logstash.j2 dest=/etc/default/logstash
-  notify: restart_logstash  
-
-- name: symlink conf.d
-  file: src="{{logstash_etc_dir}}" dest=/etc/logstash/conf.d state=link owner="{{logstash_user}}" group="{{logstash_group}}" force=true
-  notify: restart_logstash  
+- name: Install configured plugins.
+  command: /opt/logstash/bin/logstash-plugin install {{ item }}
+  with_items: "{{ logstash_plugins }}"
+  when: "item not in list.stdout"
+  notify: restart_logstash

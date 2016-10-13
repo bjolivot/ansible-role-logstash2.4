@@ -1,8 +1,5 @@
 output {
-    stdout {
-      codec => "json"
-    }
-    elasticsearch {
-      hosts => ["172.16.147.151:9200"]
-    }
+
+{{ logstash_output_conf }}
+
 }

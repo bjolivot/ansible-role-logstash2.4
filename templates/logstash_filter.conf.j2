@@ -1,12 +1,5 @@
 filter {
-    mutate {
-        rename => { "type" => "tmp_type" }
-    }
-    json {
-        source => "message"
-    }
-    mutate {
-        rename => { "type" => "cerbero_type" }
-        rename => { "tmp_type" => "type" }
-    }
+
+{{ logstash_filter_conf }}
+
 }

@@ -1,12 +1,3 @@
-###############################
-# Default settings for logstash
-###############################
-
-# Override Java location
-#JAVACMD=/usr/bin/java
-
-# Set a home directory
-#LS_HOME=/var/lib/logstash
 
 # Arguments to pass to logstash agent
 #LS_OPTS=""
@@ -19,7 +10,7 @@
 #LS_PIDFILE=/var/run/logstash.pid
 
 # user id to be invoked as; for upstart: edit /etc/init/logstash.conf
-LS_USER="{{logstash_user}}"
+# LS_USER="{{logstash_user}}"
 
 # logstash logging
 LS_LOG_FILE={{logstash_log_dir}}/logstash.log
