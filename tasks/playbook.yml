@@ -3,7 +3,7 @@
 
 
 - name: allow java to open privilegied socket (1)
-  capabilities: path="/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java" capability=cap_net_bind_service=+epi state=present
+  capabilities: path="/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java" capability="cap_net_bind_service+eip" state=present
   notify: restart_logstash
 
 - name: Add GPG key
